@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+count = 0
+by_urn = {}
+
+ARGF.each_line do |line|
+  /(?<ip>\d+\.\d+\.\d+\.\d+).*"(?<action>\b[A-Z]{3,6}?\b).*?(?<urn>[\/\w+|:|\?|=|&\/]+)/ =~ line
+  /(?<=\/)(?<oid>\w+:\w+:\w+:\d+:0)/ =~ urn  #oid   
+
+  urn.sub!(oid, "") unless urn.nil? or oid.nil?
+  by_urn[urn.to_sym] ||= 0 unless urn.nil?
+  unless urn.nil?
+    by_urn[urn.to_sym] = (by_urn[urn.to_sym] += 1) if by_urn.include?(urn.to_sym)
+  end
+  $stdout.puts "#{urn} => #{by_urn[urn.to_sym]}" unless urn.nil?
+  count += 1
+end

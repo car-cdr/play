@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+ARGF.each_line do |line|
+  /(?<ip>\d+\.\d+\.\d+\.\d+).*"(?<action>\b[A-Z]{3,6}?\b).*?(?<urn>[\/\w+|:|\?|=|&\/]+)/ =~ line
+  /(?<=\/)(?<oid>\w+:\w+:\w+:\d+:0)/ =~ urn  #oid   
+
+  $stdout.puts "#{ip} => #{action} : #{urn}" unless urn.nil? or ip.nil? or action.nil?
+end
